@@ -65,7 +65,7 @@ indentedLine = do
 intermediate :: Parser ChangelogEntry
 intermediate = do
     ch <- firstLine
-    _ <- many1 $ char '='
+    _ <- many1 $ char '-'
     _ <- newline
     a  <- many1 indentedLine
     return $ ChangelogEntry ch a
