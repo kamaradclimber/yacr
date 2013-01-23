@@ -2,6 +2,8 @@ module Main where
 
 import Yacr.Core 
 import Yacr.Types
+
+import Control.Arrow
 import System.IO
 import System.Console.CmdArgs
 
@@ -22,9 +24,11 @@ realMain :: Args -> IO ()
 realMain a = do
     inp <- getInput a
     out <- getOutput a
+    --(inp, out) <- (getInput &&& getOutput) a
     hParseConvert a inp out
     hClose inp
     hClose out
+    --map hClose [inp, out]
 
 getInput :: Args -> IO Handle
 getInput a = 

@@ -13,15 +13,12 @@ import Text.ParserCombinators.Parsec hiding (getInput)
 import Text.RSS
 
 hParseConvert :: Args -> Handle -> Handle -> IO()
-hParseConvert a i o = do
-    content <- hGetContents i 
-    hPutStrLn o $ parseConvert a content
+hParseConvert a i o =
+    hPutStrLn o . parseConvert a =<< hGetContents i 
 
 parseConvert :: Args -> String -> String
 parseConvert a content =
-    case parse changelogP "changelog" content of
-        Left err -> show err
-        Right c  -> conv a c
+    either show (conv a) $ parse changelogP "changelog" content
 
 changelogEntry2itemElem :: Args -> ChangelogEntry -> Item
 changelogEntry2itemElem a c = [
@@ -52,4 +49,4 @@ conv a = showXML . rssToXML . changelog2rss a
 
 
 getUri :: Args -> URI
-getUri a = fromMaybe nullURI (parseURI $ url a)
+getUri = fromMaybe nullURI . parseURI . url
